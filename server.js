@@ -5,7 +5,7 @@ var readline = require('readline');
 var google = require('googleapis');
 var googleAuth = require('google-auth-library');
 let colorService = require('./services/googleCalendarColorService')
-
+let scraper = require('./services/scraper.js')
 
 // If modifying these scopes, delete your previously saved credentials
 // at ~/.credentials/calendar-nodejs-quickstart.json
@@ -109,7 +109,7 @@ function listEvents(auth) {
   calendar.events.list({
     auth: auth,
     calendarId: 'primary',
-    timeMin: (new Date()).toISOString(),
+    timeMin: (new Date()).toISOString (),
     maxResults: 10,
     singleEvents: true,
     orderBy: 'startTime'
@@ -133,24 +133,22 @@ function listEvents(auth) {
 }
 
 function addEventToCalendar(auth) {
-var startDate = new Date();
-var endDate = new Date();
+var currentDate = new Date();
+var tommorowDate = new Date();
 tommorowDate.setDate(tommorowDate.getDate() + 1);
 
 
 var calendar = google.calendar('v3');
+
+/*
 var event = {
-  'summary': 'COlOR 3',
+  'summary': 'NO TIMEZONE',
   'location': '800 Howard St., San Francisco, CA 94103',
   'description': 'A chance to hear more about Google\'s developer products.',
   'start': {
-    'dateTime': startDate,
-    'timeZone': 'America/Los_Angeles',
-  },
+    'dateTime': currentDate  },
   'end': {
-    'dateTime': endDate,
-    'timeZone': 'America/Los_Angeles',
-  },
+    'dateTime': tommorowDate  },
   'reminders': {
     'useDefault': false,
     'overrides': [
@@ -160,10 +158,13 @@ var event = {
   'colorId':colorService.av,
 
 };
+*/
 
 
-
+scraper.scrapeEvents((events) => {
   
+  events.forEach((event) => {
+
   calendar.events.insert({
   auth: auth,
   calendarId: 'primary',
@@ -175,5 +176,27 @@ var event = {
   }
   console.log('%s: Event created: %s',(new Date()).toISOString(), event.htmlLink);
 });
+
+  });
+ /* for testing 
+var event = events[0];
+
+
+  calendar.events.insert({
+  auth: auth,
+  calendarId: 'primary',
+  resource: event,
+}, function(err, event) {
+  if (err) {
+    console.log('There was an error contacting the Calendar service: ' + err);
+    return;
+  }
+  console.log('%s: Event created: %s',(new Date()).toISOString(), event.htmlLink);
+});*/
+
+  });
+
+ 
+
 
 }
