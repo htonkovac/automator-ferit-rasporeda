@@ -5,7 +5,8 @@ var readline = require('readline');
 var google = require('googleapis');
 var googleAuth = require('google-auth-library');
 let colorService = require('./services/googleCalendarColorService')
-let scraper = require('./services/scraper.js')
+let scraper = require('./services/scraper.js');
+let LinkGenerator = require('./services/linkGeneratorService');
 
 // If modifying these scopes, delete your previously saved credentials
 // at ~/.credentials/calendar-nodejs-quickstart.json
@@ -22,7 +23,7 @@ fs.readFile('client_secret.json', function processClientSecrets(err, content) {
   }
   // Authorize a client with the loaded credentials, then call the
   // Google Calendar API.
-  authorize(JSON.parse(content), addEventToCalendar);
+  authorize(JSON.parse(content), testLinks);
 });
 
 /**
@@ -199,4 +200,9 @@ var event = events[0];
  
 
 
+}
+
+function testLinks() {
+let linkGenerator= new LinkGenerator(1,'komunikacije');
+  console.log(linkGenerator.getLink())
 }
