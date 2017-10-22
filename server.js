@@ -7,6 +7,7 @@ var googleAuth = require('google-auth-library');
 let colorService = require('./services/googleCalendarColorService')
 let scraper = require('./services/scraper.js');
 let LinkGenerator = require('./services/linkGeneratorService');
+let MongoClient = require('mongodb').MongoClient;
 
 // If modifying these scopes, delete your previously saved credentials
 // at ~/.credentials/calendar-nodejs-quickstart.json
@@ -21,6 +22,7 @@ fs.readFile('client_secret.json', function processClientSecrets(err, content) {
     console.log('Error loading client secret file: ' + err);
     return;
   }
+
   // Authorize a client with the loaded credentials, then call the
   // Google Calendar API.
   authorize(JSON.parse(content), testLinks);
@@ -46,7 +48,12 @@ function authorize(credentials, callback) {
       getNewToken(oauth2Client, callback);
     } else {
       oauth2Client.credentials = JSON.parse(token);
-      callback(oauth2Client);
+      
+
+      //this should be correct
+      //callback(oauth2Client);
+
+      callback(oauth2Client)
     }
   });
 }
@@ -141,27 +148,6 @@ tommorowDate.setDate(tommorowDate.getDate() + 1);
 
 var calendar = google.calendar('v3');
 
-/*
-var event = {
-  'summary': 'NO TIMEZONE',
-  'location': '800 Howard St., San Francisco, CA 94103',
-  'description': 'A chance to hear more about Google\'s developer products.',
-  'start': {
-    'dateTime': currentDate  },
-  'end': {
-    'dateTime': tommorowDate  },
-  'reminders': {
-    'useDefault': false,
-    'overrides': [
-      {'method': 'popup', 'minutes': 10},
-    ],
-  },
-  'colorId':colorService.av,
-
-};
-*/
-
-
 scraper.scrapeEvents((events) => {
   
   events.forEach((event) => {
@@ -197,12 +183,40 @@ var event = events[0];
 
   });
 
- 
+ }
 
+function testLinks(oauth2Client) {
+
+
+///new
+oauth2Client.refreshAccessToken(function(err, tokens) {});
+
+///
+//let linkGenerator = new LinkGenerator(1,'komunikacije');
+  //console.log(linkGenerator.getLink())
+
+  var url = "mongodb://localhost:27017/ieee-raspored";
+  let testStudnet = {
+    "email":"marko",
+    "smjer":"komunikacije",
+    "godina":"1",
+    "tokens":{"access_token":"ya29.GlvsBAxUwBTa0Fwt_bLsv0iTjZZx653DAJhewZO5xaRAo6VUBgHxB-AuITJLGAVv-_TIdDGbaptrg-pK904_qKaeHh3FflIfFSJHHwFNga_3UhFBvno8h2VZkzPe","refresh_token":"1/pPNfj8MpU_az-RSqzVzhMBvYjBuu59G-Rga_XddG3MA","token_type":"Bearer","expiry_date":1508701153745}
+  }
+MongoClient.connect(url, function(err, db) {
+  if (err) throw err;
+  var query = {};
+  db.collection("students").find(query).toArray(function(err, students) {
+    if (err) throw err;
+students.forEach( ()=> {
+
+})
+
+
+
+
+    db.close();
+  });
+});
 
 }
 
-function testLinks() {
-let linkGenerator= new LinkGenerator(1,'komunikacije');
-  console.log(linkGenerator.getLink())
-}

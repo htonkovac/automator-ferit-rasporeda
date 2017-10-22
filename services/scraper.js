@@ -5,8 +5,10 @@ cheerio = require('cheerio');
 
 
 function scrapeEvents(callback)	 {
+time = new Date();
+time.setDate(time.getDate +4)
 
-request.get('https://www.ferit.unios.hr/studenti/raspored-nastave-i-ispita/2017-10-17/3-21/#Uto', (error, response, body) => {
+request.get('https://www.ferit.unios.hr/studenti/raspored-nastave-i-ispita/'+time.getFullYear()+'-'+(time.getMonth()+1)+'-'+time.getDate()+'/3-21/#Uto', (error, response, body) => {
 //TODO: handle error
 
 

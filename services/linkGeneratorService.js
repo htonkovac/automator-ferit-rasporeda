@@ -8,7 +8,7 @@ constructor(yearOfCollege, programme) {
     this.yearOfCollege = yearOfCollege
     this.prog = programme
 }
-getLink(){
+getLink() {
     return this.baseLink + this.getFormatedDate()+'/'+this.yearOfCollege +'-'+this.getProgrammeCode()
 }
 
