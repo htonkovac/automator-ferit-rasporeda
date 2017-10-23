@@ -1,6 +1,3 @@
-programmeCodeService = require('./programmeCodeService')
-
-
 class LinkGenerator extends Date{
 constructor(yearOfCollege, programme) {
     super()
