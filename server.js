@@ -1,12 +1,9 @@
-
-
 var fs = require('fs');
 var readline = require('readline');
 var google = require('googleapis');
 var googleAuth = require('google-auth-library');
 let colorService = require('./services/googleCalendarColorService')
 let scraper = require('./services/scraper.js');
-let LinkGenerator = require('./services/linkGeneratorService');
 let MongoClient = require('mongodb').MongoClient;
 let programmeCodeService = require('./services/programmeCodeService')
 let url = "mongodb://localhost:27017/ieee-raspored";
@@ -14,12 +11,10 @@ let url = "mongodb://localhost:27017/ieee-raspored";
 // If modifying these scopes, delete your previously saved credentials
 // at ~/.credentials/calendar-nodejs-quickstart.json
 var SCOPES = ['https://www.googleapis.com/auth/calendar'];
-var TOKEN_DIR = (process.env.HOME || process.env.HOMEPATH ||
-  process.env.USERPROFILE) + '/.credentials/';
-var TOKEN_PATH = TOKEN_DIR + 'calendar-nodejs-quickstart.json';
+
 
 // Load client secrets from a local file.
-fs.readFile('client_secret.json', function processClientSecrets(err, content) {
+fs.readFile('client_secret.json',(err, content) => {
   if (err) {
     console.log('Error loading client secret file: ' + err);
     return;
@@ -27,7 +22,7 @@ fs.readFile('client_secret.json', function processClientSecrets(err, content) {
 
   // Authorize a client with the loaded credentials, then call the
   // Google Calendar API.
-  authorizeStudents(JSON.parse(content), updateCalendars);
+  authorize(JSON.parse(content), updateCalendars);
 });
 
 /**
@@ -38,33 +33,6 @@ fs.readFile('client_secret.json', function processClientSecrets(err, content) {
  * @param {function} callback The callback to call with the authorized client.
  */
 function authorize(credentials, callback) {
-  var clientSecret = credentials.web.client_secret;
-  var clientId = credentials.web.client_id;
-  var redirectUrl = credentials.web.redirect_uris[0];
-  var auth = new googleAuth();
-  var oauth2Client = new auth.OAuth2(clientId, clientSecret, redirectUrl);
-
-  // Check if we have previously stored a token.
-  fs.readFile(TOKEN_PATH, function (err, token) {
-    if (err) {
-      getNewToken(oauth2Client, callback);
-    } else {
-      oauth2Client.credentials = JSON.parse(token);
-
-      callback(oauth2Client)
-    }
-  });
-}
-
-
-/**
- * Create an OAuth2 client with the given credentials, and then execute the
- * given callback function.
- *
- * @param {Object} credentials The authorization client credentials.
- * @param {function} callback The callback to call with the authorized client.
- */
-function authorizeStudents(credentials, callback) {
   var clientSecret = credentials.web.client_secret;
   var clientId = credentials.web.client_id;
   var redirectUrl = credentials.web.redirect_uris[0];
@@ -107,23 +75,6 @@ function getNewToken(oauth2Client, callback) {
 }
 
 /**
- * Store token to disk be used in later program executions.
- *
- * @param {Object} token The token to store to disk.
- */
-function storeToken(token) {
-  try {
-    fs.mkdirSync(TOKEN_DIR);
-  } catch (err) {
-    if (err.code != 'EEXIST') {
-      throw err;
-    }
-  }
-  fs.writeFile(TOKEN_PATH, JSON.stringify(token));
-  console.log('Token stored to ' + TOKEN_PATH);
-}
-
-/**
  * Lists the next 10 events on the user's primary calendar.
  *
  * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
@@ -156,44 +107,23 @@ function listEvents(auth) {
   });
 }
 
-function addEventsToCalendar(auth) {
+function addEventsToCalendar(auth, events) {
   var calendar = google.calendar('v3');
-
-  scraper.scrapeEvents(studentYear, programmeCode, (events) => {
-
+  console.log('Adding events to a calendar');  
     events.forEach((event) => {
-
-      calendar.events.insert({
-        auth: auth,
-        calendarId: 'primary',
-        resource: event,
-      }, function (err, event) {
-        if (err) {
-          console.log('There was an error contacting the Calendar service: ' + err);
-          return;
-        }
-        console.log('%s: Event created: %s', (new Date()).toISOString(), event.htmlLink);
-      });
+      // calendar.events.insert({
+      //   auth: auth,
+      //   calendarId: 'primary',
+      //   resource: event,
+      // }, function (err, event) {
+      //   if (err) {
+      //     console.log('There was an error contacting the Calendar service: ' + err);
+      //     return;
+      //   }
+      //   console.log('%s: Event created: %s', (new Date()).toISOString(), event.htmlLink);
+      // });
 
     });
-    /* for testing 
-   var event = events[0];
-   
-   
-     calendar.events.insert({
-     auth: auth,
-     calendarId: 'primary',
-     resource: event,
-   }, function(err, event) {
-     if (err) {
-       console.log('There was an error contacting the Calendar service: ' + err);
-       return;
-     }
-     console.log('%s: Event created: %s',(new Date()).toISOString(), event.htmlLink);
-   });*/
-
-  });
-
 }
 
 function updateCalendars(oauth2Client) {
@@ -202,24 +132,33 @@ function updateCalendars(oauth2Client) {
   });
 
   programmeCodes.forEach(function (programmeCode) {
-    for (let i = 1; i <= 3; i++) {
+    numberOfYears = (programmeCode.length == 1 || programmeCode == programmeCodeService.komunikacije) ? 3 : 2;
+    for (let i = 1; i <= numberOfYears; i++) {
       query =
         {
           "programme": programmeCode,
           "studentYear": String(i)
         }
-      console.log(query)
-      forEachSuchStudent(query, oauth2Client, (student, oauth2Client) => {
-        if (student.tokens === undefined) {
-          return;
-        }
-        oauth2Client.credentials = student.tokens;
-        oauth2Client.refreshAccessToken((err, tokens) => { });
-        listEvents(oauth2Client);
-      })
+      // console.log(query)
+      Promise.all([getStudentsFromDBAsync(query).catch(), scraper.scrapeEventsAsync(query.studentYear, query.programme)])
+        .then((vals) => {
+          let students = vals[0];
+          let events = vals[1];
+
+          students.forEach(student => {
+            if (student.tokens === undefined) return;
+            oauth2Client.credentials = student.tokens;
+            oauth2Client.refreshAccessToken((err, tokens) => { });
+            addEventsToCalendar(oauth2Client,events);
+          })
+
+        })
+         .catch(err=>console.error(err))
     }
 
   });
+
+  //todo:: cleanup??? lines up to second closing brace??
   oauth2Client.refreshAccessToken(function (err, tokens) { });
 
   let testStudnet = {
@@ -231,17 +170,16 @@ function updateCalendars(oauth2Client) {
 
 }
 
-function forEachSuchStudent(query, oauth2Client, callback) {
-
-  MongoClient.connect(url, function (err, db) {
-    if (err) throw err;
-    db.collection("students").find(query).toArray((err, students) => {
-      if (err) console.log(err);
-      students.forEach((student) => {
-        callback(student, oauth2Client);
-        //  console.log(student)
-      })
-      db.close();
-    });
+function getStudentsFromDBAsync(query) {
+  return new Promise((resolve, reject) => {
+    MongoClient.connect(url,
+      (err, db) => {
+        if (err) reject(err);
+        db.collection("students").find(query).toArray((err, students) => {
+          if (err) reject(err);
+          return resolve(students);
+          db.close();
+        });
+      });
   });
 }
