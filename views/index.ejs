@@ -5,14 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title><%= title %></title>
 </head>
 
 <body>
     <div class="navbar navbar-default navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
-                <a href="../" class="navbar-brand">AUTOMATOR FERIT RASPOREDA</a>
+                <a href="../" class="navbar-brand"><%= title %></a>
                 <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
                       <span class="icon-bar"></span>
                       <span class="icon-bar"></span>
@@ -21,14 +21,14 @@
             </div>
             <div class="navbar-collapse collapse" id="navbar-main">
                 <ul class="nav navbar-nav">
-                    
+
                     <li>
                         <a href="../help/">Help</a>
                     </li>
                     <li>
                         <a href="http://news.bootswatch.com">FAQ</a>
                     </li>
-                    
+
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right">
@@ -44,29 +44,40 @@
     <script src="/bootstrap/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://bootswatch.com/flatly/bootstrap.min.css">
 
-    <div class="container text-center" style="padding-top:50px;">
-    <h1>AUTOMATOR FERIT RASPOREDA</h1>
-    <p>Powered by IEEE Student Branch Osijek</p>        
-    <br>
-
- 
-      <h4>Ova web aplikacije je automator ferit rasporeda sati, svakog četvrtka server se pali te svim prijavljenim studentima unosi raspored u google calendar</h1>
-    <h4> Za više informacija pročitajte <a href="/faq"> FAQ</a>
-
-        <div class="row">
-    <form action="/add-student" method="post">
-<input class="form-control" type="text" name="firstname">
-
-<button class="btn btn-primary" type="submit">I ja želim svoj raspored!</button>
-
-    </form>
-</div>
+    <div class="container text-center" style="padding-top:60px;">
+        <h1><%= title %> </h1>
+        <p>Powered by IEEE Student Branch Osijek</p>
+        <br>
 
 
-<br><br><br>
-    <img src="/images/ieee-sb-osijek.jpg">
-    
-</div>
+        <h4>Ova web aplikacije je automator ferit rasporeda sati, svakog četvrtka server se pali te svim prijavljenim studentima
+            unosi raspored u google calendar</h1>
+            <h4> Za više informacija pročitajte <a href="/faq"> FAQ</a>
+                <br>
+                <br>
+
+                <div class="row">
+                    <a class="btn btn-primary lagani-link" href="<%=authURL %>">Autoriziraj me</a>
+                    <div class="col-xs-8 col-xs-offset-2">
+                    <form action="/add-student" method="post">
+                        <label>Ime:</label>
+                        <input class="form-control" type="text" name="firstname">
+                        
+                        <label>Prezime:</label>
+                        <input class="form-control" type="text" name="prezime">
+
+                        <br>
+                        <button class="btn btn-primary" type="submit">I ja želim automatizirani raspored!</button>
+
+                    </form>
+                    </div>
+                </div>
+
+
+                <br><br><br>
+                <img src="/images/ieee-sb-osijek.jpg">
+
+    </div>
 </body>
 
 </html>

@@ -11,6 +11,7 @@ let url = "mongodb://localhost:27017/ieee-raspored";
 // If modifying these scopes, delete your previously saved credentials
 // at ~/.credentials/calendar-nodejs-quickstart.json
 let SCOPES = ['https://www.googleapis.com/auth/calendar'];
+module.exports.SCOPES = SCOPES
 
 function loadSecrets() {
   // Load client secrets from a local file.
@@ -51,11 +52,14 @@ function authorize(credentials, callback) {
  * @param {getEventsCallback} callback The callback to call with the authorized
  *     client.
  */
-function getNewToken(oauth2Client, callback) {
+function getNewToken(oauth2Client) {
   var authUrl = oauth2Client.generateAuthUrl({
     access_type: 'offline',
+    approval_prompt: 'force',
     scope: SCOPES
   });
+
+  return authUrl;
   console.log('Authorize this app by visiting this url: ', authUrl);
   var rl = readline.createInterface({
     input: process.stdin,
@@ -176,11 +180,12 @@ function getStudentsFromDBAsync(query) {
     MongoClient.connect(url,
       (err, db) => {
         if (err) reject(err);
-        db.collection("students").find(query).toArray((err, students) => {
-          if (err) reject(err);
-          return resolve(students);
-          db.close();
-        });
+        db.collection("students").find(query)
+          .toArray((err, students) => {
+            if (err) reject(err);
+            return resolve(students);
+            db.close();
+          });
       });
   });
 }
