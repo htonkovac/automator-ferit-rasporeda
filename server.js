@@ -96,7 +96,7 @@ app.post('/authorized', (req, res) => {
         })
       });
     }
-    res.render('thankyou')
+    res.render('thankyou',{"title":"Automator Ferit Rasporeda"})
   });
 })
 
