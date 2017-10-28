@@ -90,12 +90,13 @@ app.post('/authorized', (req, res) => {
             }
 
             student.token = token;
+            student.timeOfRegistration = time.toISOString();
             storeStudentInDB(student);
           });
         })
       });
     }
-    //res.render('thankyou', params)
+    res.render('thankyou')
   });
 })
 
@@ -152,6 +153,7 @@ function insertWelcomeEvent(student) {
       return;
     }
       time = new Date();
+      time2 = (new Date()).setHours(time.getHours()+1);
     authorize(JSON.parse(content), (oauth2Client) => {
 
       oauth2Client.credentials = student.tokens;
@@ -163,7 +165,7 @@ function insertWelcomeEvent(student) {
             'timeZone': 'America/Los_Angeles',
           },
           'end': {
-            'dateTime': time.setHours(time.getHours()+1).toISOString(),
+            'dateTime': time2.toISOString(),
             'timeZone': 'America/Los_Angeles',
           },
           'reminders': {
