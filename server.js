@@ -153,7 +153,8 @@ function insertWelcomeEvent(student) {
       return;
     }
       time = new Date();
-      time2 = (new Date()).setHours(time.getHours()+1);
+      time2 = new Date()
+      time2.setHours(time.getHours()+1);
     authorize(JSON.parse(content), (oauth2Client) => {
 
       oauth2Client.credentials = student.tokens;
