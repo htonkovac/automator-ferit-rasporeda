@@ -6,6 +6,8 @@ var googleAuth = require('google-auth-library');
 const express = require('express')
 const app = express()
 let calendarUpdater = require('./calendarUpdater')
+let port = process.env.PORT || 3000;
+
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -59,8 +61,8 @@ app.get('/authorize', function (req, res) {
 })
 
 
-app.listen(80, function () {
-  console.log('Example app listening on port 3000!')
+app.listen(port, function () {
+  console.log('Example app listening on port '+port+'!')
 })
 
 
