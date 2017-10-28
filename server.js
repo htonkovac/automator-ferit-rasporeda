@@ -90,7 +90,7 @@ app.post('/authorized', (req, res) => {
             }
 
             student.token = token;
-            student.timeOfRegistration = time.toISOString();
+            student.timeOfRegistration = (new Date()).toISOString();
             storeStudentInDB(student);
           });
         })
