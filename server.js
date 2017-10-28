@@ -1,4 +1,5 @@
 let CronJob = require('cron').CronJob;
+let MongoClient = require('mongodb');
 let bodyParser = require('body-parser')
 var fs = require('fs');
 var google = require('googleapis');
@@ -7,6 +8,7 @@ const express = require('express')
 const app = express()
 let calendarUpdater = require('./calendarUpdater')
 let port = process.env.PORT || 3000;
+let url = calendarUpdater.url
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -43,26 +45,63 @@ app.get('/', (req, res) => {
     res.render('index', params)
   });
 })
-app.get('/authorize', function (req, res) {
+app.get('/authorized', (req, res) => {
 
   fs.readFile('client_secret.json', (err, content) => {
     if (err) {
       console.log('Error loading client secret file: ' + err);
       return;
     }
-
-    console.log(authorize(JSON.parse(content), getAuthUrl));
   });
 
-  res.send(req.query);
+  let params = {
+    "title": "Automator Ferit Rasporeda",
+    "code": req.query.code,
+    "smjer": require('./services/programmeCodeService')
+  }
+
+  res.render('authorized', params)
+})
+
+app.post('/authorized', (req, res) => {
+  fs.readFile('client_secret.json', (err, content) => {
+    if (err) {
+      console.log('Error loading client secret file: ' + err);
+      return;
+    }
+    let student = req.body
+    if (student.hasOwnProperty('code')) {
 
 
-  console.log('someone hit our site!')
+
+
+      fs.readFile('client_secret.json', (err, content) => {
+        if (err) {
+          console.log('Error loading client secret file: ' + err);
+          return;
+        }
+
+        authorize(JSON.parse(content), (oauth2Client) => {
+
+          oauth2Client.getToken(student.code, function (err, token) {
+            if (err) {
+              console.log('Error while trying to retrieve access token', err);
+              return;
+            }
+
+            student.token = token;
+            storeStudentInDB(student);
+          });
+        })
+      });
+    }
+    //res.render('thankyou', params)
+  });
 })
 
 
 app.listen(port, function () {
-  console.log('Example app listening on port '+port+'!')
+  console.log('Example app listening on port ' + port + '!')
 })
 
 
@@ -86,4 +125,54 @@ function getAuthUrl(oauth2Client) {
   });
 
   return authUrl;
+}
+
+
+function storeStudentInDB(student) {
+
+  MongoClient.connect(url, function(err, db) {
+    if (err) console.error(err);
+
+    db.collection("students").insertOne(student, function(err, res) {
+      if (err) console.error(err);
+      console.log("1 new  student");
+
+      insertWelcomeEvent(student);
+      db.close();
+    });
+  });
+
+}
+
+function insertWelcomeEvent(student) {
+
+  fs.readFile('client_secret.json', (err, content) => {
+    if (err) {
+      console.log('Error loading client secret file: ' + err);
+      return;
+    }
+      time = new Date();
+    authorize(JSON.parse(content), (oauth2Client) => {
+
+      oauth2Client.credentials = student.tokens;
+      calendarUpdater.addEventsToCalendar(oauth2Client, [{
+          'summary': 'Hvala vam što koristite IEEE Raspored',
+          'description': 'Hvala vam što koristite IEEE Raspored',
+          'start': {
+            'dateTime': time.toISOString(),
+            'timeZone': 'America/Los_Angeles',
+          },
+          'end': {
+            'dateTime': time.setHours(time.getHours()+1).toISOString(),
+            'timeZone': 'America/Los_Angeles',
+          },
+          'reminders': {
+            'useDefault': true
+          },
+          'colorId':9                
+      }])
+      
+    });
+  });
+
 }

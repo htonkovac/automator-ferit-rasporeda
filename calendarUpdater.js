@@ -6,10 +6,8 @@ let colorService = require('./services/googleCalendarColorService')
 let scraper = require('./services/scraper.js');
 let MongoClient = require('mongodb').MongoClient;
 let programmeCodeService = require('./services/programmeCodeService')
-let url = "mongodb://localhost:27017/ieee-raspored";
-
-// If modifying these scopes, delete your previously saved credentials
-// at ~/.credentials/calendar-nodejs-quickstart.json
+let url = process.env.dburl || "mongodb://localhost:27017/ieee-raspored";
+module.exports.url = url
 let SCOPES = ['https://www.googleapis.com/auth/calendar'];
 module.exports.SCOPES = SCOPES
 
@@ -21,8 +19,6 @@ function loadSecrets() {
       return;
     }
 
-    // Authorize a client with the loaded credentials, then call the
-    // Google Calendar API.
     authorize(JSON.parse(content), updateCalendars);
   });
 }
@@ -130,6 +126,7 @@ function addEventsToCalendar(auth, events) {
 
   });
 }
+module.exports.addEventsToCalendar = addEventsToCalendar
 
 function updateCalendars(oauth2Client) {
   let programmeCodes = Object.values(programmeCodeService).filter(function (item, pos, self) {
