@@ -7,7 +7,7 @@ const express = require('express')
 const app = express()
 let calendarUpdater = require('./calendarUpdater')
 app.set('view engine', 'ejs');
-app.use(bodyParser)
+app.use(bodyParser.urlencoded({ extended: true }));
 
 
 let job = new CronJob({
@@ -24,8 +24,8 @@ app.use('/bootstrap', express.static('node_modules/bootstrap/dist'))
 app.use('/jquery/', express.static('node_modules/jquery/dist'))
 
 
+app.get('/', (req, res) => {
 
-app.use('/', (req, res) => {
   fs.readFile('client_secret.json', (err, content) => {
     if (err) {
       console.log('Error loading client secret file: ' + err);
@@ -49,10 +49,10 @@ app.get('/authorize', function (req, res) {
       return;
     }
 
-    console.log(authorize(JSON.parse(content), getNewToken));
+    console.log(authorize(JSON.parse(content), getAuthUrl));
   });
 
-  res.send(req.body);
+  res.send(req.query);
 
 
   console.log('someone hit our site!')
