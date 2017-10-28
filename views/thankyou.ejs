@@ -56,28 +56,11 @@
         <br>
 
 
-        <h4>Ova web aplikacije je automator ferit rasporeda sati, svakog četvrtka server se pali te svim prijavljenim studentima
-            unosi raspored u google calendar</h1>
-            <h4> Za više informacija pročitajte <a href="/faq"> FAQ</a>
-                <br>
-                <br>
-
-                <div class="row">
-                    <a class="btn btn-primary lagani-link" href="<%=authURL %>">Autoriziraj me</a>
-                    <div class="col-xs-8 col-xs-offset-2">
-                        <form action="/add-student" method="post">
-                            <label>Ime:</label>
-                            <input class="form-control" type="text" name="firstname">
-
-                            <label>Prezime:</label>
-                            <input class="form-control" type="text" name="prezime">
-
-                            <br>
-                            <button class="btn btn-primary" type="submit">I ja želim automatizirani raspored!</button>
-
-                        </form>
-                    </div>
-                </div>
+        
+        <div class="alert alert-dismissible alert-success">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <strong>Uspjeh!</strong> U vaš kalendar dodan je event dobrodošlice, ukoliko ga vidite uspješno ste konfigurilari <%=title%>. Ukoliko nevidite event dobrodošlice provjerite <a href="/faq" class="alert-link">FAQ</a>
+              </div>        
 
 
                 <br><br><br>
