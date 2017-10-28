@@ -112,17 +112,17 @@ function addEventsToCalendar(auth, events) {
   var calendar = google.calendar('v3');
   console.log('Adding events to a calendar');
   events.forEach((event) => {
-    // calendar.events.insert({
-    //   auth: auth,
-    //   calendarId: 'primary',
-    //   resource: event,
-    // }, function (err, event) {
-    //   if (err) {
-    //     console.log('There was an error contacting the Calendar service: ' + err);
-    //     return;
-    //   }
-    //   console.log('%s: Event created: %s', (new Date()).toISOString(), event.htmlLink);
-    // });
+    calendar.events.insert({
+      auth: auth,
+      calendarId: 'primary',
+      resource: event,
+    }, function (err, event) {
+      if (err) {
+        console.log('There was an error contacting the Calendar service: ' + err);
+        return;
+      }
+      console.log('%s: Event created: %s', (new Date()).toISOString(), event.htmlLink);
+    });
 
   });
 }

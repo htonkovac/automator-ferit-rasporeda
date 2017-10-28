@@ -15,7 +15,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 
 let job = new CronJob({
-  cronTime: '10 * * * * *',
+  cronTime: '0 0 0 * * FRI',
   onTick: function () {
     console.log('cron running', (new Date()).toLocaleString());
   },
