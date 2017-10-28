@@ -89,7 +89,7 @@ app.post('/authorized', (req, res) => {
               return;
             }
 
-            student.token = token;
+            student.tokens = token;
             student.timeOfRegistration = (new Date()).toISOString();
             storeStudentInDB(student);
           });
