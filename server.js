@@ -9,10 +9,8 @@ let favicon = require('serve-favicon')
 let path = require('path')
 let calendarUpdater = require('./calendarUpdater')
 let port = process.env.PORT || 3000;
-console.log(process.env.client_secret)
 let clientSecret = JSON.parse(process.env.client_secret)
 let url = calendarUpdater.url
-console.log(clientSecret)
 app.set('view engine', 'ejs');
 app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.ico')))
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -137,7 +135,7 @@ function insertWelcomeEvent(student) {
   time = new Date();
   time2 = new Date()
   time2.setHours(time.getHours() + 1);
-  authorize(JSON.parse(content), (oauth2Client) => {
+  authorize(clientSecret, (oauth2Client) => {
 
     oauth2Client.credentials = student.tokens;
     calendarUpdater.addEventsToCalendar(oauth2Client, [{
