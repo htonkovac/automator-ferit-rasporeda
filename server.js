@@ -17,12 +17,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 
 let job = new CronJob({
-  cronTime: '0 0 0 * * FRI',
-  onTick: authorize(clientSecret, calendarUpdater.updateCalendars),
+  cronTime: '0 0 0 * * 5',
+  onTick: cronjobtrigger,
   start: false,
-  timeZone: 'America/Los_Angeles'
+  timeZone: 'America/Los_Angeles',
+  runOnInit: false
 });
-job.start();
+job.start()
 
 app.use('/bootstrap', express.static('node_modules/bootstrap/dist'))
 app.use('/jquery', express.static('node_modules/jquery/dist'))
@@ -157,4 +158,9 @@ function insertWelcomeEvent(student) {
     }])
 
   });
+}
+
+function cronjobtrigger() {
+
+  authorize(clientSecret, calendarUpdater.updateCalendars)
 }

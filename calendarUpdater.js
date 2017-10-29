@@ -54,6 +54,7 @@ function addEventsToCalendar(auth, events) {
 module.exports.addEventsToCalendar = addEventsToCalendar
 
 function updateCalendars(oauth2Client) {
+  console.log('updating calendars ...')
   let programmeCodes = Object.values(programmeCodeService).filter(function (item, pos, self) {
     return self.indexOf(item) == pos;
   });

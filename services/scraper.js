@@ -59,7 +59,12 @@ function scrapeEventsAsync(studentYear, programmeCode) {
 			
 			const html = cheerio.load(body);
 			let anchors = html("[href*='calendar']");
-			if (anchors == null || anchors == undefined || anchors.length == 0) return reject(new Error('Site is not loading properly or design has changed, url=' +feritUrl));
+			if (anchors == null || anchors == undefined || anchors.length == 0) {
+				if(feritUrl === 'https://www.ferit.unios.hr/studenti/raspored-nastave-i-ispita/2017-11-2/2-52'){
+					return reject('automobilsko jos nema drugu godinu :p')
+				}
+				return reject(new Error('Site is not loading properly or design has changed, url=' +feritUrl));				
+			}
 
 			anchors = anchors.toArray();
 
