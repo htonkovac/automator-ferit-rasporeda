@@ -6,11 +6,14 @@ var google = require('googleapis');
 var googleAuth = require('google-auth-library');
 const express = require('express')
 const app = express()
+let favicon = require('serve-favicon')
+let path = require('path')
 let calendarUpdater = require('./calendarUpdater')
 let port = process.env.PORT || 3000;
 let url = calendarUpdater.url
 
 app.set('view engine', 'ejs');
+app.use(favicon(path.join(__dirname, 'public','images', 'favicon.ico')))
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
@@ -24,8 +27,20 @@ let job = new CronJob({
 });
 job.start();
 
+let testjob = new CronJob({
+  cronTime: '* * * * * *',
+  onTick: function () {
+    console.log('cron test test', (new Date()).toLocaleString());
+  },
+  start: false,
+  timeZone: 'America/Los_Angeles'
+});
+testjob.start();
+
 app.use('/bootstrap', express.static('node_modules/bootstrap/dist'))
-app.use('/jquery/', express.static('node_modules/jquery/dist'))
+app.use('/jquery', express.static('node_modules/jquery/dist'))
+app.use('/font-awesome', express.static('node_modules/font-awesome'))
+app.use('/images', express.static('public/images'))
 
 
 app.get('/', (req, res) => {
@@ -45,7 +60,10 @@ app.get('/', (req, res) => {
     res.render('index', params)
   });
 })
-app.get('/authorized', (req, res) => {
+
+app.get('/faq', (req, res) => {res.render('faq',{"title": "Automator Ferit Rasporeda"})});
+
+  app.get('/authorized', (req, res) => {
 
   fs.readFile('client_secret.json', (err, content) => {
     if (err) {
@@ -159,8 +177,8 @@ function insertWelcomeEvent(student) {
 
       oauth2Client.credentials = student.tokens;
       calendarUpdater.addEventsToCalendar(oauth2Client, [{
-          'summary': 'Hvala vam što koristite IEEE Raspored',
-          'description': 'Hvala vam što koristite IEEE Raspored',
+          'summary': 'Automator Ferit Rasporeda je aktiviran!',
+          'description': 'Automator Ferit Rasporeda je aktiviran!',
           'start': {
             'dateTime': time.toISOString(),
             'timeZone': 'America/Los_Angeles',
