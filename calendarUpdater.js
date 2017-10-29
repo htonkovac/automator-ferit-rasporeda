@@ -1,4 +1,3 @@
-var fs = require('fs');
 var readline = require('readline');
 var google = require('googleapis');
 var googleAuth = require('google-auth-library');
@@ -6,21 +5,15 @@ let colorService = require('./services/googleCalendarColorService')
 let scraper = require('./services/scraper.js');
 let MongoClient = require('mongodb').MongoClient;
 let programmeCodeService = require('./services/programmeCodeService')
+let clientSecret = JSON.parse(process.env.client_secret)
 let url = process.env.dburl || "mongodb://localhost:27017/ieee-raspored";
 module.exports.url = url
 let SCOPES = ['https://www.googleapis.com/auth/calendar'];
 module.exports.SCOPES = SCOPES
 
 function loadSecrets() {
-  // Load client secrets from a local file.
-  fs.readFile('client_secret.json', (err, content) => {
-    if (err) {
-      console.log('Error loading client secret file: ' + err);
-      return;
-    }
 
-    authorize(JSON.parse(content), updateCalendars);
-  });
+    authorize(clientSecret, updateCalendars);
 }
 
 /**
