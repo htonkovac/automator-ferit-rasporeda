@@ -28,7 +28,7 @@ let job = new CronJob({
 job.start();
 
 let testjob = new CronJob({
-  cronTime: '* * * * * *',
+  cronTime: '* 08 * * * *',
   onTick: function () {
     console.log('cron test test', (new Date()).toLocaleString());
   },
