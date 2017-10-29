@@ -9,9 +9,10 @@ let favicon = require('serve-favicon')
 let path = require('path')
 let calendarUpdater = require('./calendarUpdater')
 let port = process.env.PORT || 3000;
+console.log(process.env.client_secret)
 let clientSecret = JSON.parse(process.env.client_secret)
 let url = calendarUpdater.url
-
+console.log(clientSecret)
 app.set('view engine', 'ejs');
 app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.ico')))
 app.use(bodyParser.urlencoded({ extended: true }));

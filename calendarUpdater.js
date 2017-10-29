@@ -5,6 +5,7 @@ let colorService = require('./services/googleCalendarColorService')
 let scraper = require('./services/scraper.js');
 let MongoClient = require('mongodb').MongoClient;
 let programmeCodeService = require('./services/programmeCodeService')
+console.log(process.env.dburl)
 let clientSecret = JSON.parse(process.env.client_secret)
 let url = process.env.dburl || "mongodb://localhost:27017/ieee-raspored";
 module.exports.url = url
