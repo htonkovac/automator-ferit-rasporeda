@@ -13,7 +13,7 @@ module.exports.SCOPES = SCOPES
 
 function loadSecrets() {
 
-    authorize(clientSecret, updateCalendars);
+  authorize(clientSecret, updateCalendars);
 }
 
 /**
@@ -31,74 +31,6 @@ function authorize(credentials, callback) {
   var oauth2Client = new auth.OAuth2(clientId, clientSecret, redirectUrl);
 
   callback(oauth2Client)
-}
-
-/**
- * Get and store new token after prompting for user authorization, and then
- * execute the given callback with the authorized OAuth2 client.
- *
- * @param {google.auth.OAuth2} oauth2Client The OAuth2 client to get token for.
- * @param {getEventsCallback} callback The callback to call with the authorized
- *     client.
- */
-function getNewToken(oauth2Client) {
-  var authUrl = oauth2Client.generateAuthUrl({
-    access_type: 'offline',
-    approval_prompt: 'force',
-    scope: SCOPES
-  });
-
-  return authUrl;
-  console.log('Authorize this app by visiting this url: ', authUrl);
-  var rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-  });
-  rl.question('Enter the code from that page here: ', function (code) {
-    rl.close();
-    oauth2Client.getToken(code, function (err, token) {
-      if (err) {
-        console.log('Error while trying to retrieve access token', err);
-        return;
-      }
-      oauth2Client.credentials = token;
-      storeToken(token);
-      callback(oauth2Client);
-    });
-  });
-}
-
-/**
- * Lists the next 10 events on the user's primary calendar.
- *
- * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
- */
-function listEvents(auth) {
-  var calendar = google.calendar('v3');
-  calendar.events.list({
-    auth: auth,
-    calendarId: 'primary',
-    timeMin: (new Date()).toISOString(),
-    maxResults: 10,
-    singleEvents: true,
-    orderBy: 'startTime'
-  }, function (err, response) {
-    if (err) {
-      console.log('The API returned an error: ' + err);
-      return;
-    }
-    var events = response.items;
-    if (events.length == 0) {
-      console.log('No upcoming events found.');
-    } else {
-      console.log('Upcoming 10 events:');
-      for (var i = 0; i < events.length; i++) {
-        var event = events[i];
-        var start = event.start.dateTime || event.start.date;
-        console.log('%s - %s', start, event.summary);
-      }
-    }
-  });
 }
 
 function addEventsToCalendar(auth, events) {
@@ -134,7 +66,7 @@ function updateCalendars(oauth2Client) {
           "programme": programmeCode,
           "studentYear": String(i)
         }
-      // console.log(query)
+
       Promise.all([getStudentsFromDBAsync(query).catch(), scraper.scrapeEventsAsync(query.studentYear, query.programme)])
         .then((vals) => {
           let students = vals[0];
@@ -152,18 +84,8 @@ function updateCalendars(oauth2Client) {
     }
 
   });
-
-  //todo:: cleanup??? lines up to second closing brace??
-  oauth2Client.refreshAccessToken(function (err, tokens) { });
-
-  let testStudnet = {
-    "programme": "21",
-    "studentYear": "3",
-    "tokens": { "access_token": "ya29.GlvsBAxUwBTa0Fwt_bLsv0iTjZZx653DAJhewZO5xaRAo6VUBgHxB-AuITJLGAVv-_TIdDGbaptrg-pK904_qKaeHh3FflIfFSJHHwFNga_3UhFBvno8h2VZkzPe", "refresh_token": "1/pPNfj8MpU_az-RSqzVzhMBvYjBuu59G-Rga_XddG3MA", "token_type": "Bearer", "expiry_date": 1508701153745 }
-  }
-
-
 }
+module.exports.updateCalendars = updateCalendars
 
 function getStudentsFromDBAsync(query) {
   return new Promise((resolve, reject) => {

@@ -18,23 +18,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 let job = new CronJob({
   cronTime: '0 0 0 * * FRI',
-  onTick: function () {
-    console.log('cron running', (new Date()).toLocaleString());
-  },
+  onTick: authorize(clientSecret, calendarUpdater.updateCalendars),
   start: false,
   timeZone: 'America/Los_Angeles'
 });
 job.start();
-
-let testjob = new CronJob({
-  cronTime: '00 20 * * * *',
-  onTick: function () {
-    console.log('cron test test', (new Date()).toLocaleString());
-  },
-  start: false,
-  timeZone: 'America/Los_Angeles'
-});
-testjob.start();
 
 app.use('/bootstrap', express.static('node_modules/bootstrap/dist'))
 app.use('/jquery', express.static('node_modules/jquery/dist'))
@@ -56,6 +44,15 @@ app.get('/', (req, res) => {
 app.get('/wakemeup', (req,res) => {
   console.log('I was woken up at:' + (new Date()).toISOString())
   res.send('tnx')
+})
+
+app.get('/trigger', (req,res) => {
+  if(req.query.secret == process.env.trigger_secret) {
+    authorize(clientSecret, calendarUpdater.updateCalendars)
+    res.send('triggered')
+  }else {
+    res.send('wrong secret')
+  }
 })
 app.get('/faq', (req, res) => { res.render('faq', { "title": "Automator Ferit Rasporeda" }) });
 
