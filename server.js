@@ -53,6 +53,10 @@ app.get('/', (req, res) => {
   res.render('index', params)
 })
 
+app.get('/wakemeup', (req,res) => {
+  console.log('I was woken up at:' + (new Date()).toISOString())
+  res.send('tnx')
+})
 app.get('/faq', (req, res) => { res.render('faq', { "title": "Automator Ferit Rasporeda" }) });
 
 app.get('/authorized', (req, res) => {
