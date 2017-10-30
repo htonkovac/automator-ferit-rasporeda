@@ -39,7 +39,22 @@ app.get('/', (req, res) => {
     "authURL": authURL,
   }
 
-  res.render('index', params)
+
+  MongoClient.connect(url, (err, db) => {
+    if (err) {
+      console.error(err);
+      params.count = ''
+      res.render('index', params)
+      return;
+    }
+
+
+    db.collection("students").count((err, count) => {
+      params.count = count
+      res.render('index', params)
+      db.close();
+    });
+  });
 })
 
 app.get('/wakemeup', (req,res) => {
