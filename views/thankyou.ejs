@@ -11,32 +11,38 @@
 </head>
 
 <body>
-        <% include partials/navbar.ejs %>
-        
-
-    <script src="/jquery/jquery.min.js"></script>
-    <script src="/bootstrap/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="https://bootswatch.com/flatly/bootstrap.min.css">
-
-    <div class="container text-center" style="padding-top:60px;">
-        <h1>
-            <%= title %>
-        </h1>
-        <p>Powered by IEEE Student Branch Osijek</p>
-        <br>
+    <% include partials/navbar.ejs %>
 
 
-        
-        <div class="alert alert-dismissible alert-success">
+        <script src="/jquery/jquery.min.js"></script>
+        <script src="/bootstrap/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="https://bootswatch.com/flatly/bootstrap.min.css">
+
+        <div class="container text-center" style="padding-top:60px;">
+            <h1>
+                <%= title %>
+            </h1>
+            <p>Powered by IEEE Student Branch Osijek</p>
+            <br>
+
+
+
+            <div class="alert alert-dismissible alert-success">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
-                <strong>Uspjeh!</strong> U vaš kalendar dodan je event dobrodošlice, ukoliko ga vidite uspješno ste konfigurilari <%=title%>. Ukoliko nevidite event dobrodošlice provjerite <a href="/faq" class="alert-link">FAQ</a>
-              </div>        
+                <strong>Uspjeh!</strong> U vaš kalendar dodan je event dobrodošlice, ukoliko ga vidite uspješno ste konfigurilari
+                <%=title%>. Ukoliko nevidite event dobrodošlice provjerite <a href="/faq" class="alert-link">FAQ</a>
+            </div>
+
+            <div class="alert alert-dismissible alert-danger">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <strong>Važno!</strong> Nemojte se registrirati više od jedanput, jer će te dobivati dvostruki raspored u kalendar!
+            </div>
 
 
-                <br><br><br>
-                <img src="/images/ieee-sb-osijek.jpg">
+            <br><br><br>
+            <img class="img img-responsive" style="margin:auto" src="/images/ieee-sb-osijek.jpg">
 
-    </div>
+        </div>
 </body>
 
 </html>
