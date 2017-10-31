@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>
+        <%= title %>
+    </title>
+</head>
+
+<body>
+    <% include partials/navbar.ejs %>
+
+        <script src="/jquery/jquery.min.js"></script>
+        <script src="/bootstrap/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="https://bootswatch.com/flatly/bootstrap.min.css">
+
+        <div class="container text-center" style="padding-top:60px;">
+            <h1>
+                <%= title %>
+            </h1>
+            <p>Powered by IEEE Student Branch Osijek</p>
+            <br>
+
+            <div class="container ">
+                <div class="panel-group" id="faqAccordion">
+                    <div class="panel panel-default ">
+                        <div class="panel-heading accordion-toggle collapsed question-toggle" data-toggle="collapse" data-parent="#faqAccordion"
+                            data-target="#question1">
+                            <h4 class="panel-title">
+                                <a href="#" class="ing">Q:Što je google calendar?</a>
+                            </h4>
+
+                        </div>
+                        <div id="question1" class="panel-collapse collapse" style="height: 0px;">
+                            <div class="panel-body">
+                                <h5><span class="label label-primary">Answer</span></h5>
+
+                                <p>
+                                    Google Calendar je servis za planiranje i organizaciju vremena, najčešće korišten pomoću mobilne aplikacije za Android ili
+                                    iOS. Mobilna aplikacija omogućuje vam da efikasnije planirate svoje vrijeme, ali također
+                                    i da ne zaboravite bitne stvari poput rođendana ili posjeta zubaru.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default ">
+                        <div class="panel-heading accordion-toggle collapsed question-toggle" data-toggle="collapse" data-parent="#faqAccordion"
+                            data-target="#question2">
+                            <h4 class="panel-title">
+                                <a href="#" class="ing">Q: Što radi <%= title %>?</a>
+                            </h4>
+
+                        </div>
+                        <div id="question2" class="panel-collapse collapse" style="height: 0px;">
+                            <div class="panel-body">
+                                <h5><span class="label label-primary">Answer</span></h5>
+
+                                <p>
+                                    <%=title%> je web aplikacija napisana u NodeJS-u koja <a href="https://en.wikipedia.org/wiki/Web_scraping"> <i>scrapa</i> </a>                                        web stranicu FERITA za podatke o rasporedu za sve smjerove i unosi te podatke u kalendar
+                                        svakog studenta. Aplikacija se samostalno pokreće svakog petka u 00:00.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default ">
+                        <div class="panel-heading accordion-toggle collapsed question-toggle" data-toggle="collapse" data-parent="#faqAccordion"
+                            data-target="#question3">
+                            <h4 class="panel-title">
+                                <a href="#" class="ing">Q: Zašto bih ja koristio <%=title%>?</a>
+                            </h4>
+
+                        </div>
+                        <div id="question3" class="panel-collapse collapse" style="height: 0px;">
+                            <div class="panel-body">
+                                <h5><span class="label label-primary">Answer</span></h5>
+
+                                <p>
+                                    Jednom kada autorizirate
+                                    <%=title%> više nećete morati ručno unositi raspored u kalendar, to vam štedi vrijeme i živce :)
+                                        Također, u rasporedu ćete uvijek imati raspored, bez obzira radi li stranica ferita
+                                        ili ne.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default ">
+                        <div class="panel-heading accordion-toggle collapsed question-toggle" data-toggle="collapse" data-parent="#faqAccordion"
+                            data-target="#questj">
+                            <h4 class="panel-title">
+                                <a href="#" class="ing">Q: Kako znam da <%=title %> ne krade moju šifru od google accounta?</a>
+                            </h4>
+
+                        </div>
+                        <div id="questj" class="panel-collapse collapse" style="height: 0px;">
+                            <div class="panel-body">
+                                <h5><span class="label label-primary">Answer</span></h5>
+
+                                <p>
+                                    <%=title%> koristi <a href="https://en.wikipedia.org/wiki/OAuth">oauth2 autentikaciju</a> što znači da svoju šifru nikada ne unosite na ovoj web stranici, već na google.com (osim ako niste već ulogirani)
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+                    <div class="panel panel-default ">
+                        <div class="panel-heading accordion-toggle question-toggle collapsed" data-toggle="collapse" data-parent="#faqAccordion"
+                            data-target="#question4">
+                            <h4 class="panel-title">
+                                <a href="#" class="ing">Q: Zašto moram ostaviti svoje ime i prezime?</a>
+                            </h4>
+
+                        </div>
+                        <div id="question4" class="panel-collapse collapse" style="height: 0px;">
+                            <div class="panel-body">
+                                <h5><span class="label label-primary">Answer</span></h5>
+
+                                <p>
+                                    Ostavljane pravog imena i prezimena nije obavezno, ali buduće verzije
+                                    <%=title%> u kalendar će unositi samo laboratorijske vježbe vaše grupe, ako ostavite neko drugo
+                                        ime ili prezime onda će unositit sve laboratorijske grupe.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default ">
+                        <div class="panel-heading accordion-toggle question-toggle collapsed" data-toggle="collapse" data-parent="#faqAccordion"
+                            data-target="#question5">
+                            <h4 class="panel-title">
+                                <a href="#" class="ing">Q: Može li <%=title%> čitati moje e-mailove?</a>
+                            </h4>
+
+                        </div>
+                        <div id="question5" class="panel-collapse collapse" style="height: 0px;">
+                            <div class="panel-body">
+                                <h5><span class="label label-primary">Answer</span></h5>
+
+                                <p>
+                                    <%=title%> ne može čitati vaše mailove, čak niti znati vaš email, jedino što aplikacija vidi je
+                                        token(hexadecimalni random broj) za unošenje evenata u vaš kalendar, aplikacija do
+                                        duše može vidjeti sve evente u vašem kalendaru, ali to uvjek možete rješiti koristeći
+                                        odvojeni google account (u mobilnoj aplikaciji vide se svi kalendari uloginiranih
+                                        accounta)
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default ">
+                        <div class="panel-heading accordion-toggle question-toggle collapsed" data-toggle="collapse" data-parent="#faqAccordion"
+                            data-target="#question6">
+                            <h4 class="panel-title">
+                                <a href="#" class="ing">Q: Kako ja mogu znati da <%=title%> neće unositi gluposti u moj kalendar?</a>
+                            </h4>
+
+                        </div>
+                        <div id="question6" class="panel-collapse collapse" style="height: 0px;">
+                            <div class="panel-body">
+                                <h5><span class="label label-primary">Answer</span></h5>
+
+                                <p>
+                                    <%=title%> je open source pod MIT licencom. Kod možete pronaći na <a href="https://github.com/htonkovac/ieee-raspored">githubu</a>. Verzija koje je live je uvijek na master branchu (heroku je povezan s masterom jel).
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default ">
+                        <div class="panel-heading accordion-toggle question-toggle collapsed" data-toggle="collapse" data-parent="#faqAccordion"
+                            data-target="#question7">
+                            <h4 class="panel-title">
+                                <a href="#" class="ing">Q: Mogu li prestati koristiti <%=title%> u bilokojem trenutku?</a>
+                            </h4>
+
+                        </div>
+                        <div id="question7" class="panel-collapse collapse" style="height: 0px;">
+                            <div class="panel-body">
+                                <h5><span class="label label-primary">Answer</span></h5>
+
+                                <p>
+                                    <%=title%> ima pravo pisati u vaš kalendar, to pravo mu možete oduzeti na <a href="https://myaccount.google.com/permissions">ovom linku</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading accordion-toggle question-toggle collapsed" data-toggle="collapse" data-parent="#faqAccordion"
+                            data-target="#question8">
+                            <h4 class="panel-title">
+                                <a href="#" class="ing">Q: Tko je napravio <%=title%>?</a>
+                            </h4>
+
+                        </div>
+                        <div id="question8" class="panel-collapse collapse" style="height: 0px;">
+                            <div class="panel-body">
+                                <h5><span class="label label-primary">Answer</span></h5>
+
+                                <p>
+                                    <a href="https://www.linkedin.com/in/hrvoje-tonkovac-648600128/">Moj LinkedIn</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default ">
+                        <div class="panel-heading accordion-toggle collapsed question-toggle" data-toggle="collapse" data-parent="#faqAccordion"
+                            data-target="#question2234">
+                            <h4 class="panel-title">
+                                <a href="#" class="ing">Q: Nisam dobio event dobrodošlice?</a>
+                            </h4>
+
+                        </div>
+                        <div id="question2234" class="panel-collapse collapse" style="height: 0px;">
+                            <div class="panel-body">
+                                <h5><span class="label label-primary">Answer</span></h5>
+
+                                <p>
+                                    Provjerite još jednom, te probajte refreshati kalendar ako koristite mobilnu aplikaciju. Provjerite gledate li u pravi kalednar :O. Nemojte se više puta registrirati jer cete dobivati duple kalendare. Najbolje da mi pošaljete mail (htonkovac@gmail.com) pa ću provjeriti logove.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default ">
+                        <div class="panel-heading accordion-toggle collapsed question-toggle" data-toggle="collapse" data-parent="#faqAccordion"
+                            data-target="#question222234">
+                            <h4 class="panel-title">
+                                <a href="#" class="ing">Q: Dobio sam event dobrodošlice, ali nevidim raspored?</a>
+                            </h4>
+
+                        </div>
+                        <div id="question222234" class="panel-collapse collapse" style="height: 0px;">
+                            <div class="panel-body">
+                                <h5><span class="label label-primary">Answer</span></h5>
+
+                                <p>
+                                    Raspored se popunjava svakog petka u 00:00, morate se strpiti, ili mi platite pivo pa cu vam odma ručno unjest :P
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading accordion-toggle question-toggle collapsed" data-toggle="collapse" data-parent="#faqAccordion"
+                            data-target="#question0987">
+                            <h4 class="panel-title">
+                                <a href="#" class="ing">Q: Pronašao sam bug, primjetio da nešto ne radi kako treba</a>
+                            </h4>
+
+                        </div>
+                        <div id="question0987" class="panel-collapse collapse" style="height: 0px;">
+                            <div class="panel-body">
+                                <h5><span class="label label-primary">Answer</span></h5>
+
+                                <p>
+                                    Pošaljite mi mail na htonkovac@gmail.com , a za nagradu ćete dobit popust na članstvo u IEEE
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!--/panel-group-->
+            </div>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <img class="img img-responsive" style="margin:auto" src="/images/ieee-sb-osijek.jpg">
+            
+        </div>
+</body>
+
+</html>
