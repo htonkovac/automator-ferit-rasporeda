@@ -6,5 +6,6 @@ module.exports = {
 	"auditorne": "1",
 	"laboratorijske": "4",
 	"kontrolna_zadaca": "11",
-	"konstrukcijske": "4"
+	"konstrukcijske": "4",
+	"tjelesni": "11"
 }
