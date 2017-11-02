@@ -140,7 +140,7 @@ function parseColor(query) {
 	} else if (query.summary.includes('ispitni rok')) {
 		query.colorId = colors.ispitni_rok;
 	} else if (query.summary.includes('Tjelesna')) {
-		query.colorId = colors.ispitni_rok;
+		query.colorId = colors.tjelesni;
 	}
 	return query;
 }
