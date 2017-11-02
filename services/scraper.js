@@ -139,8 +139,9 @@ function parseColor(query) {
 		query.colorId = colors.kontstrukcijske;
 	} else if (query.summary.includes('ispitni rok')) {
 		query.colorId = colors.ispitni_rok;
+	} else if (query.summary.includes('Tjelesna')) {
+		query.colorId = colors.ispitni_rok;
 	}
-
 	return query;
 }
 
