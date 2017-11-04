@@ -146,7 +146,7 @@ function exponentialBackoff(err, event, calendar, auth, delay = 1) {
   }
 
   if (err) {
-    if (error.code) {
+    if (err.code) {
       console.log('There was an error contacting the Calendar service with error code:  ' + err.code + ': ' + err);
 
     } else {
