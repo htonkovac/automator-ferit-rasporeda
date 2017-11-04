@@ -15,16 +15,6 @@ app.set('view engine', 'ejs');
 app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.ico')))
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
-let job = new CronJob({
-  cronTime: '0 0 0 * * 5',
-  onTick: cronjobtrigger,
-  start: false,
-  timeZone: 'America/Los_Angeles',
-  runOnInit: false
-});
-job.start()
-
 app.use('/bootstrap', express.static('node_modules/bootstrap/dist'))
 app.use('/jquery', express.static('node_modules/jquery/dist'))
 app.use('/font-awesome', express.static('node_modules/font-awesome'))

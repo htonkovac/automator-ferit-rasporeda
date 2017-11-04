@@ -135,12 +135,13 @@ function parseColor(query) {
 		query.colorId = colors.auditorne;
 	} else if (query.summary.includes('laboratorijske')) {
 		query.colorId = colors.laboratorijske;
-	} else if (query.summary.includes('kontstrukcijske')) {
-		query.colorId = colors.kontstrukcijske;
+	} else if (query.summary.includes('konstrukcijske')) {
+		query.colorId = colors.konstrukcijske;
 	} else if (query.summary.includes('ispitni rok')) {
 		query.colorId = colors.ispitni_rok;
+	} else if (query.summary.includes('Tjelesna')) {
+		query.colorId = colors.tjelesni;
 	}
-
 	return query;
 }
 
