@@ -112,6 +112,7 @@ function addEventsToCalendarWithExponentialBackoff(auth, events) {
       //there never is
       console.log('there seems to be an event equeal to null')
     }
+    event.toString = ()=>'event'
     calendar.events.insert({
       auth: auth,
       calendarId: 'primary',
