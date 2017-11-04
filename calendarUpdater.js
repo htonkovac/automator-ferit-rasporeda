@@ -112,7 +112,7 @@ function addEventsToCalendarWithExponentialBackoff(auth, events) {
       auth: auth,
       calendarId: 'primary',
       resource: event,
-    }, (err, event) => {exponentialBackoff(err, event, calendar, auth)})
+    }, (err, event) => { exponentialBackoff(err, event, calendar, auth) })
   })
 
 }
@@ -120,9 +120,10 @@ function addEventsToCalendarWithExponentialBackoff(auth, events) {
 
 function exponentialBackoff(err, event, calendar, auth, delay = 1) {
   if (err == null || err == undefined) {
-    console.log('%s: Event created: %s', (new Date()).toISOString(), event.htmlLink);    
+    console.log('%s: Event created: %s', (new Date()).toISOString(), event.htmlLink);
     return;
   }
+  console.log('retrying with delay:' + delay)
   console.error(err.code)
   if (err.code == 403 && delay < 20) {
     delay = delay + 1;
@@ -130,7 +131,7 @@ function exponentialBackoff(err, event, calendar, auth, delay = 1) {
       auth: auth,
       calendarId: 'primary',
       resource: event,
-    }, exponentialBackoff(err, event, calendar, auth, delay)), 1000 * delay)
+    }, (err, event) => { exponentialBackoff(err, event, calendar, auth, delay) }), 700 * delay)
     return;
   }
 
