@@ -123,10 +123,8 @@ function exponentialBackoff(err, event, calendar, auth, delay = 1) {
     console.log('%s: Event created: %s', (new Date()).toISOString(), event.htmlLink);    
     return;
   }
-  console.error(err)
-  console.error(err.error)
   console.error(err.code)
-  if (err.error.code = 403 && delay < 20) {
+  if (err.code == 403 && delay < 20) {
     delay = delay + 1;
     setTimeout(calendar.events.insert({
       auth: auth,
