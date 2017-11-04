@@ -108,6 +108,9 @@ function addEventsToCalendarWithExponentialBackoff(auth, events) {
   var calendar = google.calendar('v3');
   console.log('Adding events to a calendar');
   events.forEach((event) => {
+    if(event == null) {
+      console.log('there seems to be an event equeal to null')
+    }
     calendar.events.insert({
       auth: auth,
       calendarId: 'primary',
