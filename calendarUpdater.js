@@ -112,7 +112,7 @@ function addEventsToCalendarWithExponentialBackoff(auth, events) {
       auth: auth,
       calendarId: 'primary',
       resource: event,
-    }, exponentialBackoff(err, event, calendar, auth))
+    }, (err, event) => {exponentialBackoff(err, event, calendar, auth)})
   })
 
 }
