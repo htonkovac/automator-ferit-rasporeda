@@ -112,13 +112,17 @@ function addEventsToCalendarWithExponentialBackoff(auth, events) {
       auth: auth,
       calendarId: 'primary',
       resource: event,
-    }, (err, event) => { exponentialBackoff(err, event, calendar, auth) })
+    }, (err, event) => {
+      console.log('logging event obj before exponential backoff +'+ event)
+
+      exponentialBackoff(err, event, calendar, auth) })
   })
 
 }
 
 
 function exponentialBackoff(err, event, calendar, auth, delay = 1) {
+  console.log('logging event obj on begginign of exponential backoff +'+ event)
   if (err == null || err == undefined) {
     console.log('%s: Event created: %s', (new Date()).toISOString(), event.htmlLink);
     return;
@@ -126,18 +130,28 @@ function exponentialBackoff(err, event, calendar, auth, delay = 1) {
   console.error(err.code)
   if (err.code == 403 && delay < 25) {
     delay = delay + 1;
-    console.log('retrying with delay:' + delay +' ... ' + event)    
-    
-    setTimeout(() => {calendar.events.insert({
-      auth: auth,
-      calendarId: 'primary',
-      resource: event,
-    }, (err, event) => { exponentialBackoff(err, event, calendar, auth, delay) })}, 1000 * delay)
+    console.log('retrying with delay:' + delay + ' ... ' + event)
+
+    setTimeout(() => {
+      calendar.events.insert({
+        auth: auth,
+        calendarId: 'primary',
+        resource: event,
+      }, (err, event) => {
+        console.log('logging event obj inside exponential backoff set timeout +'+ event)
+
+        exponentialBackoff(err, event, calendar, auth, delay) })
+    }, 1000 * delay)
     return;
   }
 
   if (err) {
-    console.log('There was an error contacting the Calendar service: ' + err);
+    if (error.code) {
+      console.log('There was an error contacting the Calendar service with error code:  ' + err.code + ': ' + err);
+
+    } else {
+      console.log('There was an error contacting the Calendar service: ' + err);
+    }
     return;
   }
 }
