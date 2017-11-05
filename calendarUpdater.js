@@ -114,11 +114,8 @@ function addEventsToCalendarWithExponentialBackoff(auth, events) {
       calendarId: 'primary',
       resource: event,
     }, (err, evnt) => {
-      if (err != null) {
+      if (err == null) {
         console.log('%s: Event created: %s', (new Date()).toISOString(), evnt.htmlLink);
-      }
-      if (event == null) {
-        console.log('calendar.events.insert  passes an event == null to callback')
       }
 
       if (err) {
