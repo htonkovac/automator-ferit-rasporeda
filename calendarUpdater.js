@@ -108,57 +108,46 @@ function addEventsToCalendarWithExponentialBackoff(auth, events) {
   var calendar = google.calendar('v3');
   console.log('Adding events to a calendar');
   events.forEach((event) => {
-    if(event == null) {
-      //there never is
-      console.log('there seems to be an event equeal to null')
-    }
 
     calendar.events.insert({
       auth: auth,
       calendarId: 'primary',
       resource: event,
-    }, (err, event) => {
-      if(event == null){
+    }, (err, evnt) => {
+      if (err != null) {
+        console.log('%s: Event created: %s', (new Date()).toISOString(), evnt.htmlLink);
+      }
+      if (event == null) {
         console.log('calendar.events.insert  passes an event == null to callback')
       }
-      console.log('logging event obj before exponential backoff +'+ event)
 
-      exponentialBackoff(err, event, calendar, auth) })
+      if (err) {
+        exponentialBackoff(err, event, calendar, auth)
+      }
+      //console.log('logging event obj before exponential backoff +'+ event)
+    })
   })
 
 }
 
 
 function exponentialBackoff(err, event, calendar, auth, delay = 1) {
-  if(delay == 1) {
-    console.log('logging event obj on begginign of exponential backoff +'+ event)    
-  }
-  if(event == null) {
-    console.log('event is null')
-    return;
-  }
-  if (err == null && delay>1) {
-    console.log('%s: Event created with exponentialBackoff: %s', (new Date()).toISOString(), event.htmlLink);
-    return;
-  }
-  if (err == null) {
-    console.log('%s: Event created: %s', (new Date()).toISOString(), event.htmlLink);
-    return;
-  }
+
   console.error(err.code)
   if (err.code == 403 && delay < 25) {
     delay = delay + 1;
-    console.log('retrying with delay:' + delay + ' ... ' + event)
+    console.log('retrying with delay:' + delay)
 
     setTimeout(() => {
       calendar.events.insert({
         auth: auth,
         calendarId: 'primary',
         resource: event,
-      }, (err, event) => {
-        console.log('logging event obj inside exponential backoff set timeout +'+ event)
+      }, (err, evnt) => {
+        console.log('%s: Event created with exponentialBackoff: %s', (new Date()).toISOString(), evnt.htmlLink);
 
-        exponentialBackoff(err, event, calendar, auth, delay) })
+        exponentialBackoff(err, event, calendar, auth, delay)
+      })
     }, 1500 * delay)
     return;
   }
