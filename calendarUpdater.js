@@ -116,12 +116,19 @@ function addEventsToCalendarWithExponentialBackoff(auth, events) {
     }, (err, evnt) => {
       if (err == null) {
         console.log('%s: Event created: %s', (new Date()).toISOString(), evnt.htmlLink);
+        return;
       }
 
-      if (err) {
+      if (err && err.code == 403 || err === 'socket timed out') {
         exponentialBackoff(err, event, calendar, auth)
+        return;
       }
-      //console.log('logging event obj before exponential backoff +'+ event)
+      if (err.code) {
+        console.log('There was an error contacting the Calendar service with error code:  ' + err.code + ': ' + err);
+      } else {
+        console.log('There was an error contacting the Calendar service: ' + err);
+      }
+      return;
     })
   })
 
@@ -129,11 +136,8 @@ function addEventsToCalendarWithExponentialBackoff(auth, events) {
 
 
 function exponentialBackoff(err, event, calendar, auth, delay = 1) {
-
-  console.error(err.code)
-  if (err.code == 403 && delay < 25) {
+  if (delay < 100) {
     delay = delay + 1;
-    console.log('retrying with delay:' + delay)
 
     setTimeout(() => {
       calendar.events.insert({
@@ -141,8 +145,8 @@ function exponentialBackoff(err, event, calendar, auth, delay = 1) {
         calendarId: 'primary',
         resource: event,
       }, (err, evnt) => {
-        if(err == null) {
-          console.log('%s: Event created with exponentialBackoff: %s', (new Date()).toISOString(), evnt.htmlLink);          
+        if (err == null) {
+          console.log('%s: Event created with exponentialBackoff:'+delay+': %s', (new Date()).toISOString(), evnt.htmlLink);
         } else {
           exponentialBackoff(err, event, calendar, auth, delay)
         }
@@ -152,13 +156,4 @@ function exponentialBackoff(err, event, calendar, auth, delay = 1) {
     return;
   }
 
-  if (err) {
-    if (err.code) {
-      console.log('There was an error contacting the Calendar service with error code:  ' + err.code + ': ' + err);
-
-    } else {
-      console.log('There was an error contacting the Calendar service: ' + err);
-    }
-    return;
-  }
 }
