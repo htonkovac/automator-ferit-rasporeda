@@ -141,9 +141,12 @@ function exponentialBackoff(err, event, calendar, auth, delay = 1) {
         calendarId: 'primary',
         resource: event,
       }, (err, evnt) => {
-        console.log('%s: Event created with exponentialBackoff: %s', (new Date()).toISOString(), evnt.htmlLink);
+        if(err == null) {
+          console.log('%s: Event created with exponentialBackoff: %s', (new Date()).toISOString(), evnt.htmlLink);          
+        } else {
+          exponentialBackoff(err, event, calendar, auth, delay)
+        }
 
-        exponentialBackoff(err, event, calendar, auth, delay)
       })
     }, 1500 * delay)
     return;
