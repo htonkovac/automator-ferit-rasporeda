@@ -112,12 +112,12 @@ function addEventsToCalendarWithExponentialBackoff(auth, events) {
       //there never is
       console.log('there seems to be an event equeal to null')
     }
-    event.toString = ()=>'event'
+
     calendar.events.insert({
       auth: auth,
       calendarId: 'primary',
       resource: event,
-    }, (err, evenatKojiJeNekadNullMadaNebiTrebaoIToJeSigurnoBugUApiObjektu) => {
+    }, (err, event) => {
       if(event == null){
         console.log('calendar.events.insert  passes an event == null to callback')
       }
@@ -137,7 +137,11 @@ function exponentialBackoff(err, event, calendar, auth, delay = 1) {
     console.log('event is null')
     return;
   }
-  if (err == null || err == undefined) {
+  if (err == null && delay>1) {
+    console.log('%s: Event created with exponentialBackoff: %s', (new Date()).toISOString(), event.htmlLink);
+    return;
+  }
+  if (err == null) {
     console.log('%s: Event created: %s', (new Date()).toISOString(), event.htmlLink);
     return;
   }
