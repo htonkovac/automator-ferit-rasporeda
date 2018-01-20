@@ -77,7 +77,7 @@ function updateCalendars(oauth2Client) {
             if (student.tokens === undefined) return;
             oauth2Client.credentials = student.tokens;
             oauth2Client.refreshAccessToken((err, tokens) => { });
-            addEventsToCalendar(oauth2Client, events);
+            addEventsToCalendarWithExponentialBackoff(oauth2Client, events);
           })
 
         })
@@ -101,4 +101,59 @@ function getStudentsFromDBAsync(query) {
           });
       });
   });
+}
+
+
+function addEventsToCalendarWithExponentialBackoff(auth, events) {
+  var calendar = google.calendar('v3');
+  console.log('Adding events to a calendar');
+  events.forEach((event) => {
+
+    calendar.events.insert({
+      auth: auth,
+      calendarId: 'primary',
+      resource: event,
+    }, (err, evnt) => {
+      if (err == null) {
+        console.log('%s: Event created: %s', (new Date()).toISOString(), evnt.htmlLink);
+        return;
+      }
+
+      if (err && err.code == 403 || err === 'socket timed out') {
+        exponentialBackoff(err, event, calendar, auth)
+        return;
+      }
+      if (err.code) {
+        console.log('There was an error contacting the Calendar service with error code:  ' + err.code + ': ' + err);
+      } else {
+        console.log('There was an error contacting the Calendar service: ' + err);
+      }
+      return;
+    })
+  })
+
+}
+
+
+function exponentialBackoff(err, event, calendar, auth, delay = 1) {
+  if (delay < 100) {
+    delay = delay + 1;
+
+    setTimeout(() => {
+      calendar.events.insert({
+        auth: auth,
+        calendarId: 'primary',
+        resource: event,
+      }, (err, evnt) => {
+        if (err == null) {
+          console.log('%s: Event created with exponentialBackoff:'+delay+': %s', (new Date()).toISOString(), evnt.htmlLink);
+        } else {
+          exponentialBackoff(err, event, calendar, auth, delay)
+        }
+
+      })
+    }, 1500 * delay)
+    return;
+  }
+
 }
