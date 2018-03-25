@@ -106,10 +106,11 @@ function renameProperties(query) {
 
 function splitDates(query) {
 	dates = query.dates.split("/")
+	extraHoursToFixFeritDSTBug = 1
 	//console.log(dates[0].substring(4, 6))
 	//console.log(dates[1].substring(4, 6))
-	startDate = new Date(dates[0].substring(0, 4), parseInt(dates[0].substring(4, 6)) - 1, dates[0].substring(6, 8), parseInt(dates[0].substring(9, 11)), dates[0].substring(11, 13), dates[0].substring(13, 15));
-	endDate   = new Date(dates[1].substring(0, 4), parseInt(dates[1].substring(4, 6)) - 1, dates[1].substring(6, 8), parseInt(dates[1].substring(9, 11)), dates[1].substring(11, 13), dates[1].substring(13, 15));
+	startDate = new Date(dates[0].substring(0, 4), parseInt(dates[0].substring(4, 6)) - 1, dates[0].substring(6, 8), parseInt(dates[0].substring(9, 11)) + extraHoursToFixFeritDSTBug, dates[0].substring(11, 13), dates[0].substring(13, 15));
+	endDate   = new Date(dates[1].substring(0, 4), parseInt(dates[1].substring(4, 6)) - 1, dates[1].substring(6, 8), parseInt(dates[1].substring(9, 11)) + extraHoursToFixFeritDSTBug, dates[1].substring(11, 13), dates[1].substring(13, 15));
 
 	//console.log(startDate);
 	query.start = { 'dateTime': startDate }
