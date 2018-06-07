@@ -1,8 +1,8 @@
 version: '2'
 
 services:
-  combishackaton:
-    image: combishackaton
+  automator_rasporeda:
+    image: automator_rasporeda
     build: .
     environment:
       NODE_ENV: production
@@ -45,7 +45,7 @@ services:
       ME_CONFIG_MONGODB_SERVER: ${MONGO_NETWORK_ALIAS}
     depends_on:
       - mongo
-      - combishackaton
+      - automator_rasporeda
     command: tini -- bash -c 'sleep 5 && node app'
 networks: 
   backend:

@@ -1,3 +1,4 @@
+require('dotenv').config()
 let CronJob = require('cron').CronJob;
 let MongoClient = require('mongodb');
 let bodyParser = require('body-parser')
