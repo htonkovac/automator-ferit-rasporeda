@@ -9,7 +9,7 @@ const app = express()
 let favicon = require('serve-favicon')
 let path = require('path')
 let calendarUpdater = require('./calendarUpdater')
-let port = process.env.PORT || 3000;
+let port = process.env.PORT || 80;
 let clientSecret = JSON.parse(process.env.client_secret)
 let url = calendarUpdater.url
 app.set('view engine', 'ejs');
