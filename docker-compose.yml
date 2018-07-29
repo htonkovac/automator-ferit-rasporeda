@@ -6,9 +6,12 @@ services:
     build: .
     environment:
       NODE_ENV: production
+      client_secret: ${client_secret}
+      trigger_secret: ${trigger_secret}
+      dburl: "mongodb://${MONGO_ADMIN_USER}:${MONGO_ADMIN_PASS}@${MONGO_NETWORK_ALIAS}:27017/${MONGO_DB_NAME}?authSource=admin"
     ports:
       - ${PORT}:${PORT}
-      - client_secret: ${client_secret}
+
     depends_on: 
         - mongo
     networks: 
